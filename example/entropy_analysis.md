@@ -78,6 +78,13 @@ The `mmse` struct is structurally comparable to a `freq` structure as obtained f
 
 If, after computing mMSE, you would like to use the FieldTrip functions for plotting, e.g. **[ft_multiplotTFR](https://github.com/fieldtrip/fieldtrip/blob/release/ft_multiplotTFR.m)** and computing statistics, i.e. **[ft_freqstatistics](https://github.com/fieldtrip/fieldtrip/blob/release/ft_freqstatistics.m)**, the easiest way is to place the mMSE output into a freq structure (see **[ft_datatype_freq](https://github.com/fieldtrip/fieldtrip/blob/release/utilities/ft_datatype_freq.m)**) so you can just plug the mMSE values into these functions.
 
+The mMMSE equivalent 'freq' structure which can be used for calling FieldTrip plotting functions can be derived from: 
+	
+	freq = keepfields(mmsedata,{‘label’ ’time’});
+	freq.dimord = ‘chan_freq_time’;
+	freq.freq = 1:size(mmsedata.r,2);
+	freq.powspctrm = mmsedata.r (or mmsedata.sampen, depending on what you want to visualize).
+
 # Run standard MSE analysis on your data
 
 Finally, it is also possible to run standard MSE analysis with our function. Standard MSE is computed across the complete timeseries at once so it has no time dimension. Furthermore, data is coarsened by averaging adjacent samples (point averaging). Finally, the r parameter is computed only once, instead of recomputed for each timescale. Please see the original MSE paper for details (**[Costa et al. 2002](https://doi.org/10.1103/PhysRevLett.89.068102.m)**). 
